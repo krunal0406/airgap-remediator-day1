@@ -1,5 +1,5 @@
-"""Intentionally vulnerable demo code. Never use this pattern in production."""
+import ast
 
 def calculate(expression: str):
-    # Vulnerability: eval() can execute arbitrary Python expressions.
-    return eval(expression)
+    # Safe evaluation of Python literals
+    return ast.literal_eval(expression)
