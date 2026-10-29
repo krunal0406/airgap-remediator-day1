@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException
 from backend.llm import explain_findings
 from backend.scanner import PROJECT_ROOT, SAMPLE_DIR, scan_sample
 from backend.remediator import remediate_sample
+from backend.git_workflow import remediate_on_branch
 
 app = FastAPI(
     title="Air-Gapped Security Remediator — Day 1 MVP",
@@ -46,5 +47,15 @@ def remediate():
     except (RuntimeError, TimeoutError, OSError) as exc:
         raise HTTPException(
             status_code=502,
+            detail=str(exc),
+        ) from exc
+
+@app.post("/remediate/git")
+def remediate_git():
+    try:
+        return remediate_on_branch()
+    except (RuntimeError, TimeoutError, OSError, ValueError) as exc:
+        raise HTTPException(
+            status_code=409,
             detail=str(exc),
         ) from exc
