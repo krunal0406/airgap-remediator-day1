@@ -113,6 +113,7 @@ def validate_patch(source: str) -> None:
         args.posonlyargs
         or len(args.args) != 1
         or args.args[0].arg != "expression"
+	or args.args[0].annotation is not None
         or args.vararg is not None
         or args.kwonlyargs
         or args.kwarg is not None
