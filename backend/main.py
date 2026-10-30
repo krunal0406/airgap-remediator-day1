@@ -80,7 +80,7 @@ def remediate_git():
 @app.get("/scan/normalized")
 def scan_normalized():
     try:
-        raw_report = scan_sample()
+        raw_report = scan_project(get_scan_root())
         return normalize_report(raw_report)
     except (RuntimeError, TimeoutError, OSError) as exc:
         raise HTTPException(
