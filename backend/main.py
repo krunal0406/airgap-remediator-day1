@@ -5,7 +5,13 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 
 from backend.llm import explain_findings
-from backend.scanner import PROJECT_ROOT, SAMPLE_DIR, scan_sample
+from backend.scanner import (
+    PROJECT_ROOT,
+    SAMPLE_DIR,
+    scan_sample,
+    scan_project,
+    get_scan_root,
+)
 from backend.remediator import remediate_sample
 from backend.git_workflow import remediate_on_branch
 
@@ -27,6 +33,16 @@ def scan():
         return scan_sample()
     except (RuntimeError, TimeoutError) as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+@app.get("/scan/project")
+def scan_configured_project():
+    try:
+        return scan_project(get_scan_root())
+    except (RuntimeError, TimeoutError, OSError) as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=str(exc),
+        ) from exc
 
 
 @app.post("/analyze")
