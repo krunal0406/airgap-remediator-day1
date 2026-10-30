@@ -14,6 +14,7 @@ from backend.scanner import (
 )
 from backend.remediator import remediate_sample
 from backend.git_workflow import remediate_on_branch
+from backend.normalizer import normalize_report
 
 app = FastAPI(
     title="Air-Gapped Security Remediator — Day 1 MVP",
@@ -73,5 +74,16 @@ def remediate_git():
     except (RuntimeError, TimeoutError, OSError, ValueError) as exc:
         raise HTTPException(
             status_code=409,
+            detail=str(exc),
+        ) from exc
+
+@app.get("/scan/normalized")
+def scan_normalized():
+    try:
+        raw_report = scan_sample()
+        return normalize_report(raw_report)
+    except (RuntimeError, TimeoutError, OSError) as exc:
+        raise HTTPException(
+            status_code=500,
             detail=str(exc),
         ) from exc
