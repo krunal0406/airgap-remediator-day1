@@ -1,0 +1,16 @@
+{
+  "airgap_mode": true,
+  "proxy_host": "proxy.airgap.internal",
+  "proxy_port": 8080,
+  "allowed_internal_domains": [
+    "*.airgap.internal",
+    "localhost",
+    "127.0.0.1"
+  ],
+  "blocked_external_egress": [
+    "api.external-cloud.com",
+    "telemetry.remote.io"
+  ],
+  "mock_responses_enabled": true,
+  "remediation_status": "COMPLIANT"
+}
